@@ -1,6 +1,8 @@
 package com.company.restproj.controller;
 
 
+import com.company.restproj.RestprojApplication;
+import com.company.restproj.configure.ShutdownManager;
 import com.company.restproj.jsonvalidate.JsonValidate;
 import com.company.restproj.model.Error;
 import com.company.restproj.model.SystemItemImportRequest;
@@ -8,12 +10,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MainController {
+    @Autowired
+    private ShutdownManager shutdownManager;
+
     private final Error errorInvalidJson = new Error(400, "Validation Failed");
 
     @Autowired
@@ -40,6 +48,10 @@ public class MainController {
 
     }
 
+    @PostMapping("/down")
+    public void shutdownContext() {
+        shutdownManager.initiateShutdown(0);
+    }
 
 
 
