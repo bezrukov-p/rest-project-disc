@@ -17,12 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 public class MainController {
     @Autowired
     private ShutdownManager shutdownManager;
 
     private final Error errorInvalidJson = new Error(400, "Validation Failed");
+    private final Error errorFileNotFound = new Error(404, "Item not found");
 
     @Autowired
     private JsonValidate jsonValidate;
@@ -35,16 +38,46 @@ public class MainController {
             return ResponseEntity.badRequest().body(errorInvalidJson);
         else{
             SystemItemImportRequest imp = mapper.treeToValue(json, SystemItemImportRequest.class);
+            /*
+            приходит в произвольном порядке, нужно чтобы во входных данных система была цельной, и оставалась цельной
+            в бд. только пэрент, нет детей. проверка даты?
+            проверка на уникальность айдишек
+            нет циклических зависимостей?
+            проверка и вычисление/перевычисление size
+            НУЖНО ОБНОВЛЯТЬ ДАТУ У РОДИТЕЛЬСКИХ ПАПОК ВСЕХ?
+            */
+
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteFile(){
+    public ResponseEntity<Error> deleteFiles(@PathVariable(value = "id") String id, @RequestParam Date date){
+        /*
+        проверка на валидацию входных данных
+        если удаляется папка, то удаляются все дочерние элементы
+        возвращается ошибка 404!!! как вернуть её с контентом?
+        вычисление новых размеров
+        */
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/nodes/{id}")
-    public void getFile() {
+    public void getFiles(@PathVariable String id) {
+        /*
+        получить в виде массива все элементы нода
+        */
+    }
+
+    @GetMapping("/updates")
+    public void getFiles24Hours(@RequestParam Date date) {
+        /*
+            ТОЛЬКО ДЛЯ ОДНОГО ЭЛЕМЕНТА
+        */
+    }
+
+    @GetMapping("/node/{id}/history")
+    public void getHistory(@PathVariable String id, @RequestParam Date dateStart, @RequestParam Date dateEnd) {
 
     }
 
