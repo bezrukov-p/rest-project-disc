@@ -18,19 +18,19 @@ import java.nio.file.Paths;
 
 @Component
 public class JsonValidate {
-    private final String SCHEMA_PATH = "target/classes/model/json-schema.json";
+    private final String SCHEMA_PATH;
     private final ObjectMapper mapper = new ObjectMapper();
 
     {
-        /*Path path = Paths.get("classes/model/json-schema.json");
+        Path path = Paths.get("target/classes/model/json-schema.json");
         if(Files.exists(path)) {
-            SCHEMA_PATH = "classes/model/json-schema.json";
+            SCHEMA_PATH = "target/classes/model/json-schema.json";
             System.out.println("#################################TARGET#################################");
         }
         else {
             SCHEMA_PATH = "src/main/resources/model/json-schema.json";
             System.out.println("#################################PROJECT#################################");
-        }*/
+        }
     }
 
     public boolean isJsonValid(JsonNode json, String typeOfJson) {
