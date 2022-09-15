@@ -20,8 +20,6 @@ public class SystemItemLogic {
 
     public void parseSystemItemImportRequest(SystemItemImportRequest imp) {
 
-        //сначала нужно добавить все папки
-        //ЛУЧШЕ ПРОВЕРИТЬ
         for (SystemItemImport item: imp.getItems()){
             if (item.getType().equals("FOLDER")) {
                 if (systemItemRepository.existsById(item.getId())){

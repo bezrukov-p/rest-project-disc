@@ -1,6 +1,7 @@
 package com.company.restproj.model;
 
 import com.company.restproj.modeldb.SystemItemDB;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class SystemItem {
     private String id;
     private String url;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     private Date date;
     private String parentId;
     private String type;

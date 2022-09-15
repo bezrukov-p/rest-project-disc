@@ -4,12 +4,15 @@ import com.company.restproj.model.SystemItemImport;
 import com.company.restproj.model.SystemItemImportRequest;
 import com.company.restproj.modeldb.SystemItemDB;
 import com.company.restproj.repository.SystemItemRepository;
+import com.ethlo.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.DatatypeConverter;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -22,14 +25,14 @@ public class ValidateInputData {
     SystemItemRepository systemItemRepository;
 
     public Date dateValidate(String date) {
-        Calendar calendar;
+        Date res;
         try {
-            calendar = DatatypeConverter.parseDateTime(date);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            OffsetDateTime time = OffsetDateTime.parse(date);
+            res = new Date(time.toInstant().toEpochMilli());
+        } catch (DateTimeParseException e) {
             return null;
         }
-        return new Date(calendar.getTimeInMillis());
+        return res;
     }
 
     public boolean inputItemsValidate(SystemItemImportRequest imp) {

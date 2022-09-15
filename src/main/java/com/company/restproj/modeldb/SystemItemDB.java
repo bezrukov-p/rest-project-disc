@@ -1,6 +1,7 @@
 package com.company.restproj.modeldb;
 
 import com.company.restproj.model.SystemItemImport;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Column;

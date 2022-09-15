@@ -1,6 +1,7 @@
 package com.company.restproj.model;
 
 
+import com.ethlo.time.DateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
