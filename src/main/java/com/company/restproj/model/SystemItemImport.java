@@ -11,6 +11,7 @@ public class SystemItemImport {
     private String id;
     private String url;
     private String parentId;
+    @NonNull
     private String type;
-    private long size;
+    private Long size;
 }
