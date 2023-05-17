@@ -7,6 +7,7 @@ import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
@@ -19,24 +20,14 @@ import java.util.Set;
 
 @Component
 public class JsonValidate {
-    private final String SCHEMA_PATH;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    {
-        Path path = Paths.get("target/classes/model/json-schema.json");
-        if(Files.exists(path)) {
-            SCHEMA_PATH = "target/classes/model/json-schema.json";
-        }
-        else {
-            SCHEMA_PATH = "src/main/resources/model/json-schema.json";
-        }
-    }
-
     public boolean isJsonValid(JsonNode json, String typeOfJson) {
-        JsonSchemaFactory schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909);
+        JsonSchemaFactory schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
         JsonNode schemaNode = null;
+        ClassPathResource resource = new ClassPathResource("json-schema.json");
         try {
-            InputStream schema = new FileInputStream(SCHEMA_PATH);
+            InputStream schema = resource.getInputStream();
             schemaNode = mapper.readTree(schema).get(typeOfJson);
         } catch (IOException e) {
             e.printStackTrace();
