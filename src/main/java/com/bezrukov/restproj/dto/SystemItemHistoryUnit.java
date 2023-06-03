@@ -1,6 +1,7 @@
 package com.bezrukov.restproj.dto;
 
 import com.bezrukov.restproj.entity.SystemItemEntity;
+import com.bezrukov.restproj.entity.SystemItemHistoryEntity;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,12 +15,21 @@ public class SystemItemHistoryUnit {
     Long size;
     LocalDateTime date;
 
-    public SystemItemHistoryUnit(SystemItemEntity itemDB) {
-        id = itemDB.getId();
-        url = itemDB.getUrl();
-        parentId = itemDB.getParentId();
-        type = itemDB.getType();
-        size = itemDB.getSize();
-        date = itemDB.getDate();
+    public SystemItemHistoryUnit(SystemItemEntity item) {
+        id = item.getId();
+        url = item.getUrl();
+        parentId = item.getParentId();
+        type = item.getType();
+        size = item.getSize();
+        date = item.getDate();
+    }
+
+    public SystemItemHistoryUnit(SystemItemHistoryEntity item) {
+        id = item.getId();
+        url = item.getUrl();
+        parentId = item.getParentId();
+        type = item.getType();
+        size = item.getSize();
+        date = item.getDate();
     }
 }

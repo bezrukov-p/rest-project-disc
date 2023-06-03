@@ -1,6 +1,8 @@
 package com.bezrukov.restproj.controller;
 
 
+import com.bezrukov.restproj.entity.SystemItemHistoryEntity;
+import com.bezrukov.restproj.repository.SystemItemHistoryRepository;
 import com.bezrukov.restproj.repository.SystemItemRepository;
 import com.bezrukov.restproj.service.SystemItemService;
 import com.bezrukov.restproj.service.ValidatorInputData;
@@ -14,11 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @RestController
+@Transactional
 public class MainController {
 
     private final Error errorInvalidData = new Error(400, "Validation Failed");
@@ -27,17 +32,19 @@ public class MainController {
     private final SystemItemService systemItemService;
     private final ObjectMapper objectMapper;
     private final SystemItemRepository systemItemRepository;
+    private final SystemItemHistoryRepository systemItemHistoryRepository;
 
 
     @Autowired
     public MainController(ValidatorInputData validatorInputData,
                           SystemItemService systemItemService,
                           ObjectMapper objectMapper,
-                          SystemItemRepository systemItemRepository) {
+                          SystemItemRepository systemItemRepository, SystemItemHistoryRepository systemItemHistoryRepository) {
         this.validatorInputData = validatorInputData;
         this.systemItemService = systemItemService;
         this.objectMapper = objectMapper;
         this.systemItemRepository = systemItemRepository;
+        this.systemItemHistoryRepository = systemItemHistoryRepository;
     }
 
 
@@ -111,9 +118,15 @@ public class MainController {
             return ResponseEntity.badRequest().body(errorInvalidData);
         }
 
+        if (!systemItemRepository.existsById(id))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorFileNotFound);
 
-
-        return ResponseEntity.noContent().build();
+        List<SystemItemHistoryEntity> itemsHistory = systemItemHistoryRepository.
+                getSystemItemHistoryEntitiesByIdAndDateGreaterThanEqualAndDateLessThan(id, startDateTime, endDateTime);
+        SystemItemHistoryResponse response = new SystemItemHistoryResponse();
+        response.addUnit(systemItemRepository.getReferenceById(id));
+        itemsHistory.forEach(response::addUnit);
+        return ResponseEntity.ok().body(response);
     }
 
 }

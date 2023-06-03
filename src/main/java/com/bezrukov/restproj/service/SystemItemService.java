@@ -5,21 +5,27 @@ import com.bezrukov.restproj.dto.SystemItemHistoryResponse;
 import com.bezrukov.restproj.dto.SystemItemImportRequest;
 import com.bezrukov.restproj.entity.SystemItemEntity;
 import com.bezrukov.restproj.dto.SystemItemImport;
+import com.bezrukov.restproj.entity.SystemItemHistoryEntity;
+import com.bezrukov.restproj.repository.SystemItemHistoryRepository;
 import com.bezrukov.restproj.repository.SystemItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Transactional
 public class SystemItemService {
 
     private final SystemItemRepository systemItemRepository;
+    private final SystemItemHistoryRepository systemItemHistoryRepository;
 
     @Autowired
-    public SystemItemService(SystemItemRepository systemItemRepository) {
+    public SystemItemService(SystemItemRepository systemItemRepository, SystemItemHistoryRepository systemItemHistoryRepository) {
         this.systemItemRepository = systemItemRepository;
+        this.systemItemHistoryRepository = systemItemHistoryRepository;
     }
 
     public boolean areInputDataValidForWritingToDB(List<SystemItemImport> importItems) {
@@ -67,6 +73,9 @@ public class SystemItemService {
             if (item.getType().equals("FOLDER")) {
                 if (systemItemRepository.existsById(item.getId())){
                     SystemItemEntity itemFromDB = systemItemRepository.getReferenceById(item.getId());
+
+                    systemItemHistoryRepository.save(new SystemItemHistoryEntity(itemFromDB));
+
                     resizeParentItems(itemFromDB, imp.getUpdateDate(), -1);
                     SystemItemEntity itemDB = new SystemItemEntity(item, imp.getUpdateDate());
                     itemDB.setSize(itemFromDB.getSize());
@@ -84,6 +93,9 @@ public class SystemItemService {
             if (item.getType().equals("FILE")) {
                 if (systemItemRepository.existsById(item.getId())){
                     SystemItemEntity itemFromDB = systemItemRepository.getReferenceById(item.getId());
+
+                    systemItemHistoryRepository.save(new SystemItemHistoryEntity(itemFromDB));
+
                     resizeParentItems(itemFromDB, imp.getUpdateDate(), -1);
                     SystemItemEntity itemDB = new SystemItemEntity(item, imp.getUpdateDate());
                     itemDB.setSize(itemFromDB.getSize());
@@ -117,6 +129,7 @@ public class SystemItemService {
         if ("FILE".equals(itemDB.getType())) {
             resizeParentItems(itemDB, updateTime, -1);
             systemItemRepository.deleteById(id);
+            systemItemHistoryRepository.deleteAllById(id);
         }
         else {
             resizeParentItems(itemDB, updateTime, -1);
@@ -130,6 +143,7 @@ public class SystemItemService {
             children.forEach(this::deleteItemAndChildrenRecursive);
 
         systemItemRepository.deleteById(itemDB.getId());
+        systemItemHistoryRepository.deleteAllById(itemDB.getId());
     }
 
     public SystemItem getNode(String id) {
@@ -139,7 +153,7 @@ public class SystemItemService {
         return item;
     }
 
-    public void fillChildrenRecursive(SystemItem item) {
+    private void fillChildrenRecursive(SystemItem item) {
         if (item.getType().equals("FILE")){
             item.setChildren(null);
             return;
