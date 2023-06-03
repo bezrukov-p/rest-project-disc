@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class MainController {
                 return ResponseEntity.badRequest().body(errorInvalidData);
         } catch (IOException e) {
             // ТУТ ЛОГИРОВАНИЕ
+            e.printStackTrace();
             System.out.println("не найдена схема");
             return ResponseEntity.internalServerError().build();
         }
@@ -72,7 +74,7 @@ public class MainController {
     public ResponseEntity<Error> deleteFiles(@PathVariable String id, @RequestParam String date){
         LocalDateTime updateTime;
         try {
-            updateTime = LocalDateTime.parse(date);
+            updateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
         }
         catch (DateTimeParseException e) {
             return ResponseEntity.badRequest().body(errorInvalidData);
@@ -97,7 +99,7 @@ public class MainController {
     public ResponseEntity<?> getFiles24Hours(@RequestParam String date) {
         LocalDateTime dateTime;
         try {
-            dateTime = LocalDateTime.parse(date);
+            dateTime = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
         }
         catch (DateTimeParseException e) {
             return ResponseEntity.badRequest().body(errorInvalidData);
@@ -112,8 +114,8 @@ public class MainController {
         LocalDateTime startDateTime;
         LocalDateTime endDateTime;
         try {
-            startDateTime = LocalDateTime.parse(dateStart);
-            endDateTime = LocalDateTime.parse(dateEnd);
+            startDateTime = LocalDateTime.parse(dateStart, DateTimeFormatter.ISO_DATE_TIME);
+            endDateTime = LocalDateTime.parse(dateEnd, DateTimeFormatter.ISO_DATE_TIME);
         } catch (DateTimeParseException e) {
             return ResponseEntity.badRequest().body(errorInvalidData);
         }

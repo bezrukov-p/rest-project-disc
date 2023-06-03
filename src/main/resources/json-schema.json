@@ -120,7 +120,7 @@
         "description": "id родительской папки"
       },
       "type": {
-        "$ref": "classpath:/model/json-schema.json#/SystemItemType"
+        "$ref": "classpath:/json-schema.json#/SystemItemType"
       },
       "size": {
         "nullable": true,
@@ -139,6 +139,10 @@
   },
   "SystemItemImportRequest": {
     "type": "object",
+    "required": [
+      "items",
+      "updateDate"
+    ],
     "properties": {
       "items": {
         "type": "array",

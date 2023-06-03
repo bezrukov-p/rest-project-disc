@@ -14,7 +14,7 @@ import java.util.List;
 public class SystemItem {
     private String id;
     private String url;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private LocalDateTime date;
     private String parentId;
     private String type;
