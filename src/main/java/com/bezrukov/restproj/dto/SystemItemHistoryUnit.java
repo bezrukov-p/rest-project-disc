@@ -1,9 +1,9 @@
-package com.company.restproj.model;
+package com.bezrukov.restproj.dto;
 
-import com.company.restproj.modeldb.SystemItemDB;
+import com.bezrukov.restproj.entity.SystemItemEntity;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class SystemItemHistoryUnit {
@@ -12,9 +12,9 @@ public class SystemItemHistoryUnit {
     String parentId;
     String type;
     Long size;
-    Date date;
+    LocalDateTime date;
 
-    public SystemItemHistoryUnit(SystemItemDB itemDB) {
+    public SystemItemHistoryUnit(SystemItemEntity itemDB) {
         id = itemDB.getId();
         url = itemDB.getUrl();
         parentId = itemDB.getParentId();

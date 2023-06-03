@@ -1,6 +1,6 @@
-package com.company.restproj.model;
+package com.bezrukov.restproj.dto;
 
-import com.company.restproj.modeldb.SystemItemDB;
+import com.bezrukov.restproj.entity.SystemItemEntity;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -10,10 +10,10 @@ import java.util.List;
 public class SystemItemHistoryResponse {
     List<SystemItemHistoryUnit> units;
 
-    public SystemItemHistoryResponse(List<SystemItemDB> itemsDB) {
+    public SystemItemHistoryResponse(List<SystemItemEntity> itemsDB) {
         units = new ArrayList<>();
         if (!(itemsDB == null)){
-            for (SystemItemDB itemDB: itemsDB) {
+            for (SystemItemEntity itemDB: itemsDB) {
                 units.add(new SystemItemHistoryUnit(itemDB));
             }
         }

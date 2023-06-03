@@ -1,19 +1,20 @@
-package com.company.restproj.modeldb;
+package com.bezrukov.restproj.entity;
 
-import com.company.restproj.model.SystemItemImport;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.bezrukov.restproj.dto.SystemItemImport;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Table(name = "items")
-public class SystemItemDB {
+@NoArgsConstructor
+public class SystemItemEntity {
     @Id
     private String id;
     private String url;
@@ -21,18 +22,14 @@ public class SystemItemDB {
     private String parentId;
     private String type;
     private Long size;
-    private Date date;
+    private LocalDateTime date;
 
-    public SystemItemDB(SystemItemImport item, Date dateIn){
+    public SystemItemEntity(SystemItemImport item, LocalDateTime dateIn){
         id = item.getId();
         url = item.getUrl();
         parentId = item.getParentId();
         type = item.getType();
         size = item.getSize();
         date = dateIn;
-    }
-
-    public SystemItemDB() {
-
     }
 }
