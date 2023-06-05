@@ -21,16 +21,16 @@ import java.util.Set;
 
 @Service
 public class ValidatorInputData {
-    ObjectMapper mapper;
+    private final ObjectMapper objectMapper;
     @Autowired
     public ValidatorInputData(ObjectMapper mapper) {
-        this.mapper = mapper;
+        this.objectMapper = mapper;
     }
 
     public boolean isJsonValidByJsonSchema(String jsonString, String typeOfJson) throws IOException {
         JsonNode jsonNode;
         try {
-            jsonNode = mapper.readTree(jsonString);
+            jsonNode = objectMapper.readTree(jsonString);
         } catch (JsonProcessingException e) {
             return false;
         }
@@ -38,7 +38,7 @@ public class ValidatorInputData {
         JsonSchemaFactory schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7);
         ClassPathResource resource = new ClassPathResource("json-schema.json");
         InputStream schema = resource.getInputStream();
-        JsonNode schemaNode = mapper.readTree(schema).get(typeOfJson);
+        JsonNode schemaNode = objectMapper.readTree(schema).get(typeOfJson);
         JsonSchema jsonSchema = schemaFactory.getSchema(schemaNode);
 
         Set<ValidationMessage> validationMessages = jsonSchema.validate(jsonNode);
